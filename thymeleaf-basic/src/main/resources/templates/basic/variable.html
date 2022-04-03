@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>SpringEl 표현식</h1>
+<ul>
+    <h2>Object</h2>
+    <li>
+        ${user.username} =
+        <span th:text="${user.username}"></span>
+    </li>
+    <li>
+        ${user.getUsername()} =
+        <span th:text="${user.getUsername()}"></span>
+    </li>
+    <li>
+        ${user['username']} =
+        <span th:text="${user['username']}"></span>
+    </li>
+</ul>
+
+<ul>
+    <h2>List</h2>
+    <li>
+        ${users[0].username} =
+        <span th:text="${users[0].username}"></span>
+    </li>
+    <li>
+        ${users[0].getUsername()} =
+        <span th:text="${users[0].getUsername()}"></span>
+    </li>
+    <li>
+        ${users[0]['username']} =
+        <span th:text="${users[0]['username']}"></span>
+    </li>
+</ul>
+
+<ul>
+    <h2>Map</h2>
+    <li>
+        ${userMap['userA'].username} =
+        <span th:text="${userMap['userA'].username}"></span>
+    </li>
+    <li>
+        ${userMap['userA'].getUsername()} =
+        <span th:text="${userMap['userA'].getUsername()}"></span>
+    </li>
+    <li>
+        ${userMap['userA']['username']} =
+        <span th:text="${userMap['userA']['username']}"></span>
+    </li>
+</ul>
+
+<h2>지역 번수 - (th:with)</h2>
+<div th:with="first=${users[0]}">
+    <p>처음 사람의 이름은 <span th:text="${first.username}"></span></p>
+</div>
+
+</body>
+</html>

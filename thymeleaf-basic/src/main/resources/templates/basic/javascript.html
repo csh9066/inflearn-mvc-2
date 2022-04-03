@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>[[${user}]]</div>
+</body>
+<script>
+    var username = [[${user.username}]];
+    var age = [[${user.age}]];
+
+    var user = [[${user}]];
+</script>
+
+<script th:inline="javascript">
+    var username = [[${user.username}]];
+    var age = [[${user.age}]];
+
+    var user = [[${user}]];
+</script>
+
+<script th:inline="javascript">
+    [# th:each="user, stat: ${users}"]
+    var user[[${stat.count}]] = [[${user}]];
+    [/]
+</script>
+</html>
+</html>
