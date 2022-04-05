@@ -43,7 +43,12 @@ public class ValidationItemControllerV1 {
         model.addAttribute("item", new Item());
         return "validation/v1/addForm";
     }
-
+    /*
+    * 문제점
+    * 1. 타임리프의 지원을 못 받음
+    * 2. 필드에 에러가 여러가지일 경우 또 다른 자료구조를 만들어야 함
+    * 3. 타입 에러 처리가 불가능
+    * */
     @PostMapping("/add")
     public String addItem(@ModelAttribute Item item, RedirectAttributes redirectAttributes, Model model) {
 

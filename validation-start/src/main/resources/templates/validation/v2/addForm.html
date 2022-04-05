@@ -1,4 +1,4 @@
-    <!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
@@ -27,30 +27,34 @@
     </div>
 
     <form action="item.html" th:action th:object="${item}" method="post">
+        <!-- #fields는 th:object로 선언된 필드를 만하는거임 -->
+        <div th:each="err : ${#fields.globalErrors()}" th:text="${err}" th:class="|error field-error|">
+        </div>
+
         <div>
             <label for="itemName" th:text="#{label.item.itemName}">상품명</label>
             <input type="text" id="itemName" th:field="*{itemName}" class="form-control"
-                   th:classappend="${errors?.containsKey('itemName')} ? 'field-error' : _"
+                   th:errorclass="field-error"
                    placeholder="이름을 입력하세요">
+            <div th:errors="*{itemName}" th:class="error"></div>
         </div>
-        <div th:if="${errors?.containsKey('itemName')}" th:text="${errors.get('itemName')}" th:class="error"></div>
 
         <div>
             <label for="price" th:text="#{label.item.price}">가격</label>
             <input type="text" id="price" th:field="*{price}" class="form-control"
-                   placeholder="가격을 입력하세요"
-                   th:classappend="${errors?.containsKey('price')} ? 'field-error' : _">
+                   th:errorclass="field-error"
+                   placeholder="가격을 입력하세요" >
+            <div th:errors="*{price}" th:class="error"></div>
         </div>
-        <div th:if="${errors?.containsKey('price')}" th:text="${errors.get('price')}" th:class="error"></div>
 
         <div>
             <label for="quantity" th:text="#{label.item.quantity}">수량</label>
             <input type="text" id="quantity" th:field="*{quantity}"
-                   class="form-control" placeholder="수량을 입력하세요"
-                   th:classappend="${errors?.containsKey('quantity')} ? 'field-error' : _">
+                   th:errorclass="field-error"
+                   class="form-control" placeholder="수량을 입력하세요">
         </div>
-        <div th:if="${errors?.containsKey('quantity')}" th:text="${errors.get('quantity')}" th:class="error"></div>
-        <div th:if="${errors?.containsKey('globalError')}" th:text="${errors.get('globalError')}" th:class="error"></div>
+        <div th:errors="*{quantity}" th:class="error"></div>
+
         <hr class="my-4">
 
         <div class="row">
