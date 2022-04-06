@@ -4,6 +4,9 @@ import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
 import hello.itemservice.domain.item.SaveCheck;
 import hello.itemservice.domain.item.UpdateCheck;
+import hello.itemservice.web.validation.form.ItemSaveForm;
+import hello.itemservice.web.validation.form.ItemUpdateForm;
+import hello.itemservice.web.validation.form.TestForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -19,7 +22,7 @@ import static java.util.Objects.nonNull;
 
 @Slf4j
 @Controller
-@RequestMapping("/validation/v4/items")
+    @RequestMapping("/validation/v4/items")
 @RequiredArgsConstructor
 public class ValidationItemControllerV4 {
 
@@ -46,27 +49,23 @@ public class ValidationItemControllerV4 {
     }
 
     @PostMapping("/add")
-    public String addItem(@Validated(SaveCheck.class) @ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String addItem(@Validated @ModelAttribute("item") ItemSaveForm item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-        validateItemTotalPriceMin(item, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            return "validation/v4/addForm";
-        }
-
-        Item savedItem = itemRepository.save(item);
-        redirectAttributes.addAttribute("itemId", savedItem.getId());
-        redirectAttributes.addAttribute("status", true);
-        return "redirect:/validation/v4/items/{itemId}";
-    }
-
-    private void validateItemTotalPriceMin(Item item, BindingResult bindingResult) {
         if(nonNull(item.getQuantity()) && nonNull(item.getPrice())) {
             int resultPrice = item.getQuantity() * item.getPrice();
             if (resultPrice < 10000) {
                 bindingResult.reject("totalPriceMin", new Object[]{10000, resultPrice}, null);
             }
         }
+
+        if (bindingResult.hasErrors()) {
+            return "validation/v4/addForm";
+        }
+
+        Item savedItem = itemRepository.save(new Item(item.getItemName(), item.getPrice(), item.getQuantity()));
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/validation/v4/items/{itemId}";
     }
 
     @GetMapping("/{itemId}/edit")
@@ -77,18 +76,22 @@ public class ValidationItemControllerV4 {
     }
 
     @PostMapping("/{itemId}/edit")
-    public String edit(@PathVariable Long itemId, @Validated(UpdateCheck.class) @ModelAttribute Item item, BindingResult bindingResult) {
-        validateItemTotalPriceMin(item, bindingResult);
+    public String edit(@PathVariable Long itemId, @Validated @ModelAttribute("item") ItemUpdateForm item, BindingResult bindingResult) {
+
+        if(nonNull(item.getQuantity()) && nonNull(item.getPrice())) {
+            int resultPrice = item.getQuantity() * item.getPrice();
+            if (resultPrice < 10000) {
+                bindingResult.reject("totalPriceMin", new Object[]{10000, resultPrice}, null);
+            }
+        }
 
         if (bindingResult.hasErrors()) {
-            log.error("errros={}", bindingResult);
             return "validation/v4/editForm";
         }
 
-        itemRepository.update(itemId, item);
+        itemRepository.update(itemId, new Item(item.getItemName(), item.getPrice(), item.getQuantity()));
         return "redirect:/validation/v4/items/{itemId}";
     }
-
 
 }
 
