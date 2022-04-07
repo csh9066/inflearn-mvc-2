@@ -10,10 +10,7 @@ import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
@@ -77,7 +74,7 @@ public class LoginController {
 
     }
 
-    @PostMapping
+//    @PostMapping
     public String loginV3(@Validated @ModelAttribute("loginForm") LoginForm loginForm,
                           BindingResult bindingResult,
                           HttpServletRequest request
@@ -96,6 +93,30 @@ public class LoginController {
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
         return "redirect:/";
+
+    }
+
+    @PostMapping
+    public String loginV4(@Validated @ModelAttribute("loginForm") LoginForm loginForm,
+                          BindingResult bindingResult,
+                          @RequestParam(defaultValue = "/", name = "redirectURL") String redirectURL,
+                          HttpServletRequest request
+    ) {
+        Member loginMember = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
+
+        if (isNull(loginMember)) {
+            bindingResult.reject("loginFail");
+        }
+
+        if (bindingResult.hasErrors()) {
+            log.info("bindingResult={}", bindingResult.getAllErrors());
+            return "login/loginForm";
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
+
+        return "redirect:" + redirectURL;
 
     }
 }
