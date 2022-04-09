@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--
+    1. field에 있는 value는 string임
+    1. submit을 하면 post edit 컨트롤러로 string 넘아감
+    3. post edit 컨트롤러는 다시 string에서 ipPort로 변환함
+-->
+<form th:object="${form}" th:method="post">
+    th:field <input type="text" th:field="*{ipPort}"><br/>
+    th:value <input type="text" th:value="*{ipPort}">(보여주기 용도)<br/>
+    <input type="submit"/>
+</form>
+
+</body>
+</html>
